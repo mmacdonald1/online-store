@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import HomeNav from '../../components/HomeNav/HomeNav'
 import HomeCarousel from '../../components/HomeCarousel/HomeCarousel'
 import About from '../../components/About/About'
 import FeaturedProducts from '../../components/FeaturedProducts/FeaturedProducts'
@@ -10,7 +9,6 @@ class HomePage extends Component{
   render(){
     return(
       <div className="site-wrapper" id="top">
-        <HomeNav/>
       <section className="hero-area section-margin">
         <HomeCarousel/>
       </section>
