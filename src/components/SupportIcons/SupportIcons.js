@@ -4,7 +4,7 @@ class SupportIcons extends Component{
   render(){
     return(
       <div>
-      <section className="section-margin">
+      <section className="">
           <h2 className="sr-only">Method section</h2>
         <div className="container">
           <div className="row section-padding space-dt--30">
