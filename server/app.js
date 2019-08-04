@@ -6,8 +6,6 @@ const cors = require('cors')
 
 const app = express();
 
-//cors
-
 //Set up proxy and CORS to avoid CORS errors
 app.set('trust proxy', true)
 const corsOptions = {
@@ -16,14 +14,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-//bodyParser
-// app.use(bodyParser.json())
-// app.use(bodyParser.urlencoded({extended:false}))
-
 app.use(require("body-parser").text());
-
-//set static folder
-app.use(express.static(`${__dirname}/public`))
 
 const port = process.env.PORT || 5000
 
