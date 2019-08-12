@@ -3,38 +3,63 @@ const stripe = require('stripe')('sk_test_6fcuR0Yuy1IqFzotfi5AH7W100hVl0GzkV')
 const bodyParser = require('body-parser')
 const exphbs= require('express-handlebars')
 const cors = require('cors')
+const { ApolloServer, gql } = require('apollo-server-express');
+const mongoose = require('mongoose');
+const { resolvers } = require('./resolvers');
+const { typeDefs } = require('./typeDefs');
 
-const app = express();
 
-//Set up proxy and CORS to avoid CORS errors
-app.set('trust proxy', true)
-const corsOptions = {
-  origin:'http://localhost:3000', //the port my react app is running on.
-  credentials: true,
-};
-app.use(cors(corsOptions));
 
-app.use(require("body-parser").text());
+const startServer = async () => {
+  // create express instance
+  const app = express();
 
-const port = process.env.PORT || 5000
+//set up ApolloServer
+  const server = new ApolloServer({
+    // These will be defined for both new or existing servers
+    typeDefs,
+    resolvers,
+  });
 
-app.post("/charge", async (req, res) => {
-  console.log('hit charge', req.body)
-  try {
-    let {status} = await stripe.charges.create({
-      amount: 2000,
-      currency: "usd",
-      description: "An example charge",
-      source: req.body
-    });
+  // Apply apollo middleware to express server
+  server.applyMiddleware({ app }); // app is from an existing express app
 
-    res.json({status});
-  } catch (err) {
-    console.log(err)
-    res.status(500).end();
-  }
-});
 
-app.listen(port, ()=>{
-  console.log('server started on port ' + port)
-})
+  //Set up proxy and CORS to avoid CORS errors
+  app.set('trust proxy', true)
+  const corsOptions = {
+    origin:'http://localhost:3000', //the port my react app is running on.
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
+
+  app.use(require("body-parser").text());
+
+  //wait for mongoose connection to the database to resolve
+  await mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
+
+  //stripe api request
+  app.post("/charge", async (req, res) => {
+    console.log('hit charge', req.body)
+    try {
+      let {status} = await stripe.charges.create({
+        amount: 2000,
+        currency: "usd",
+        description: "An example charge",
+        source: req.body
+      });
+
+      res.json({status});
+    } catch (err) {
+      console.log(err)
+      res.status(500).end();
+    }
+  });
+
+
+  app.listen({port: 5000}, ()=>{
+    console.log('server started on port ' + server.graphqlPath)
+  })
+}
+
+startServer()

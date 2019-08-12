@@ -4,15 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon --exec babel-node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "apollo-server-express": "^2.8.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
+    "graphql": "^14.4.2",
+    "mongoose": "^5.6.9",
     "nodemon": "^1.19.1",
     "stripe": "^7.5.0"
   }
